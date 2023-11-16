@@ -9,7 +9,7 @@ const Board = () => {
   const [player,setPlayer]=useState('X')
 
   const calculateWinner = () => {
-    const winCombo = [
+    const winningCombos = [
       [0,1,2],
       [3,4,5],
       [6,7,8],
@@ -19,29 +19,38 @@ const Board = () => {
       [0,4,8],
       [2,4,6]
     ]
-    for (let i = 0; i < winCombo.length; i++){
-      const [a, b, c] = winCombo[i]
-      if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
+ // above is the ways to win, iterate them, give each one values to [a,b,c]. squares[a]is a player, if same player clicked winningCombos[i], won
+    for (let i = 0; i < winningCombos.length; i++){
+      const [a, b, c] = winningCombos[i]
+      if (squares[a] && squares[b] === squares[c] && squares[a] === squares[b]) {
         return squares[a]
       }
     }
   }
-
-  const handleClick = (i) => {
-    if (calculateWinner() || squares[i]) {
-      return
-    }
-   const newSquares=[...squares]
-    newSquares[i] = player
-    setSquares(newSquares)
-    setPlayer(player==='X'?"O":"X")
-  }
-
   
+  
+  const handleClick = (i) => {
+    // shallow copy
+    const newSquares = [...squares];
+    // make sure when the game has a winner, stop running the game. or the squares are occupied,return, no more further running.
+    if (calculateWinner() || newSquares[i]) {
+      return;
+    }
+
+    //give player value x or o to one square 
+    newSquares[i] = player;
+    // so squares "will be "newSqaures array 
+    setSquares(newSquares);
+    // switch player between x and o
+    setPlayer(player=== "X"?"O":"X");
+  };
+
+  // reset to original squares to all null 
   const handleReset = () => {
     setSquares(Array(9).fill(null))
   }
 
+  //find a winner
   const winner=calculateWinner()
 
   return (
@@ -68,7 +77,6 @@ const Board = () => {
   </>
 
   )
-  
   
 }
 
